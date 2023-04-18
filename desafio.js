@@ -1,8 +1,13 @@
+const fs = require('fs')
+
+const filename = './productManager.json'
+
 class ProductManager {
     constructor() {
         this.products = []
         this.index = 0
-        this.path = filePath
+        //this.path = filePath
+        
     }
     addProduct = (title, description, price, thumbnail, code, stock) => {
         this.index++
@@ -12,7 +17,10 @@ class ProductManager {
             console.log("Faltan Datos")
         } else {
             this.products.push(product)
+            this.saveProductFile()
+           
         }
+        
     }
     getProduct = () => {
         return this.products
@@ -52,6 +60,7 @@ class ProductManager {
         }
 
         console.log('Se actualizo el campo')
+        this.saveProductFile()
     }
 
     deleteProduct = (id) => {
@@ -61,10 +70,21 @@ class ProductManager {
         }
         this.products.splice(productIndex, 1)
         console.log('Se elimino el producto correctamente')
+        this.saveProductFile()
+    }
+
+    loadProductsFile(){
+        const content = fs.readFileSync(filename, 'utf-8')
+        this.products = JSON.parse(content)
+    }
+    saveProductFile(){
+        fs.writeFileSync(filename,JSON.stringify(this.products,null,'\t'))
     }
 
 }
 
 const producto = new ProductManager()
 producto.addProduct('producto prueba', 'Este es un producto prueba', '200', 'Sin imagen', 'abc123', '25')
+producto.addProduct('producto prueba1', 'Este es un producto prueba1', '300', 'Sin imagen', 'abc456', '26')
+producto.addProduct('producto prueba2', 'Este es un producto prueba2', '400', 'Sin imagen', 'abc789', '27')
 console.log(producto.products)

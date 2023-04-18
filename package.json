@@ -1,0 +1,23 @@
+{
+  "name": "desafios",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaimesilvalorca/DesafiosBackend.git"
+  },
+  "keywords": [],
+  "author": "Jaime Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jaimesilvalorca/DesafiosBackend/issues"
+  },
+  "homepage": "https://github.com/jaimesilvalorca/DesafiosBackend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
