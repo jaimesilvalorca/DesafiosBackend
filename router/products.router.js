@@ -1,6 +1,6 @@
 const {Router} = require('express')
 const fs = require ('fs')
-const filename = '../productManager.json'
+const filename = './productManager.json'
 
 const router = Router()
 
@@ -33,6 +33,12 @@ router.get('/:pid',(request,response)=>{
     }else{
         response.send('No se encontró el ID seleccionado')
     }
+})
+
+router.get('/',(req,res)=>{
+    const content = fs.readFileSync(filename,'utf-8')
+    const products = JSON.parse(content)
+    res.render('home',products)
 })
 
 
