@@ -28,16 +28,16 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:pid', async (req, res) => {
-    const id = req.params.pid
+    const _id = req.params.pid
     
     const update = req.body
-    const product = await productsModel.findOneAndUpdate({ id }, update).lean().exec()
+    const product = await productsModel.findOneAndUpdate({_id }, update).lean().exec()
     res.send({ product })
 })
 
 router.delete('/:pid', async (req, res) => {
-    const id = req.params.pid
-    const product = await productsModel.deleteOne({id})
+    const _id = req.params.pid
+    const product = await productsModel.deleteOne({_id})
     res.send("Producto Eliminado")
 })
 
