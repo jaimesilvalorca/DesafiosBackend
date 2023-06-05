@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import productModel from '../dao/models/products.models.js'
 // import fs from 'fs'
 // const {Router} = require('express')
 // const fs = require ('fs')
@@ -36,7 +37,7 @@ router.get("/", async (req, res) => {
 
     const user = req.session.user
 
-    res.render('products', {data, user})
+    if(req.session.email === 'jaimesilvalorca@gmail.com' && req.session.password==='Darkshadow.12') return res.render('products', {data, user})
 })
 
 

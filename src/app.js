@@ -13,6 +13,9 @@ import handlebars from "express-handlebars"
 import mongoose from "mongoose"
 import chatRouter from "./router/chat.router.js"
 import messagesModel from "./dao/models/message.models.js"
+import sessionRouter from "./router/session.router.js"
+import session from "express-session"
+import MongoStore from "connect-mongo"
 
 const url = 'mongodb+srv://coder:coder@cluster0.cmvdrrk.mongodb.net/ecommerce'
 
@@ -28,6 +31,18 @@ app.use(express.static('./src/public'))
 app.get('/', (request, response) => {
     response.send('Desafio 03!')
 })
+
+app.use(session({
+    store:MongoStore.create({
+        mongoUrl:url,
+        dbName:'ecommerce'    
+    }),
+    secret:'jaimesilva',
+    resave:true,
+    saveUninitialized:true
+}))
+
+app.use('/session',sessionRouter)
 
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
