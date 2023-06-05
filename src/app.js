@@ -8,9 +8,11 @@ import express from "express"
 import { Server } from "socket.io"
 import productRouter from "./router/products.router.js"
 import cartRouter from "./router/carts.router.js"
-import productViewRouter from "./router/productsView.js"
+import productViewRouter from "./router/productsView.router.js"
 import handlebars from "express-handlebars"
 import mongoose from "mongoose"
+import chatRouter from "./router/chat.router.js"
+import messagesModel from "./dao/models/message.models.js"
 
 const url = 'mongodb+srv://coder:coder@cluster0.cmvdrrk.mongodb.net/ecommerce'
 
@@ -30,6 +32,7 @@ app.get('/', (request, response) => {
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
 app.use('/api/productsview', productViewRouter)
+app.use('/api/chats',chatRouter)
 
 mongoose.set('strictQuery', false)
 
@@ -42,42 +45,15 @@ try {
 
     const socketServer = new Server(httpServer);
 
-    socketServer.on("connection", (socketClient) => {
-        console.log("User conected");
-        socketClient.on("deleteProd", (prodId) => {
-            const result = prod.deleteProduct(prodId);
-            if (result.error) {
-                socketClient.emit("error", result);
-            } else {
-                socketServer.emit("products", prod.getProducts());
-                socketClient.emit("result", "Producto eliminado");
-            }
-        });
-        socketClient.on("addProd", (product) => {
-            const producto = JSON.parse(product);
-            const result = prod.addProduct(producto);
-            if (result.error) {
-                socketClient.emit("error", result);
-            } else {
-                socketServer.emit("products", prod.getProducts());
-                socketClient.emit("result", "Producto agregado");
-            }
-        });
-        socketClient.on("newMessage", async (message) => {
-            try {
-                console.log(message);
-                let newMessage = await messageModel.create({
-                    user: message.email.value,
-                    message: message.message,
-                });
-                console.log("app", newMessage);
-                socketServer.emit("emitMessage", newMessage);
-            } catch (error) {
-                console.log(error);
-                socketClient.emit("error", error);
-            }
-        });
-    });
+    socketServer.on("connection", socket => {
+        console.log("New client connected")
+        socket.on("message", async data => {
+        await messagesModel.create(data)
+        let messages = await messagesModel.find().lean().exec()
+        socketServer.emit("logs", messages)
+        })
+    })
+
 } catch (error) {
     console.log(error);
 }
