@@ -10,17 +10,13 @@ router.get('/register', (req, res) => {
     res.render('sessions/register')
 })
 
-router.get('/github',(req,res)=>{
-    res.render('sessions/loginGitHub')
-})
-
 router.get('/github/login',passport.authenticate('github',{scope:['user:email']}),(req,res)=>{})
 
-router.get('/githubcallback', passport.authenticate('github',{failureRedirect:'/session/github'}),
+router.get('/githubcallback', passport.authenticate('github',{failureRedirect:'/session/login'}),
 async(req,res)=>{
 
     req.session.user = req.user
-    res.redirect('/')
+    res.redirect('/api/products')
 
 }
 )
