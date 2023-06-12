@@ -16,6 +16,9 @@ import messagesModel from "./dao/models/message.models.js"
 import sessionRouter from "./router/session.router.js"
 import session from "express-session"
 import MongoStore from "connect-mongo"
+import passport from "passport"
+import initializePassport from "./config/passport.config.js"
+
 
 const url = 'mongodb+srv://coder:coder@cluster0.cmvdrrk.mongodb.net/ecommerce'
 
@@ -41,6 +44,9 @@ app.use(session({
     resave:true,
     saveUninitialized:true
 }))
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/session',sessionRouter)
 
