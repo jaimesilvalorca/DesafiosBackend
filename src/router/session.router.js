@@ -3,6 +3,10 @@ import UserModel from "../dao/models/user.model.js";
 import productModel from "../dao/models/products.models.js";
 import { createHash, isValidPassword } from "../utils.js";
 import passport from "passport"
+import dotenv from 'dotenv'
+
+dotenv.config()
+
 
 const router = Router()
 
@@ -49,7 +53,7 @@ router.post('/login',
         email: req.user.email,
         age: req.user.age
     }
-    res.redirect('/api/products')
+    res.cookie(process.env.JWT_COOKIE_NAME,req.user.token).redirect('/api/products/view')
 })
 
 router.get('/failLogin', (req, res) => {

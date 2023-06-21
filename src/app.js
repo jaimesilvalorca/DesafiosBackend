@@ -18,6 +18,8 @@ import session from "express-session"
 import MongoStore from "connect-mongo"
 import passport from "passport"
 import initializePassport from "./config/passport.config.js"
+import {passportCall} from "./utils.js"
+import cookieParser from "cookie-parser"
 
 
 const url = 'mongodb+srv://coder:coder@cluster0.cmvdrrk.mongodb.net/ecommerce'
@@ -26,6 +28,7 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', './src/views')
@@ -50,9 +53,9 @@ app.use(passport.session())
 
 app.use('/session',sessionRouter)
 
-app.use('/api/products', productRouter)
+app.use('/api/products',passportCall('jwt'),productRouter)
 app.use('/api/carts', cartRouter)
-app.use('/api/productsview', productViewRouter)
+app.use('/api/productsview',productViewRouter)
 app.use('/api/chats',chatRouter)
 
 mongoose.set('strictQuery', false)
@@ -62,6 +65,7 @@ try {
     console.log("DB conected");
     const httpServer = app.listen(8080, () => {
         console.log("Server UP");
+        console.log("http://localhost:8080/")
     });
 
     const socketServer = new Server(httpServer);
