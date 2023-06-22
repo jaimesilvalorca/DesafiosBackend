@@ -34,10 +34,18 @@ router.get("/", async (req, res) => {
     
     const data = await productModel.paginate(search, options)
     console.log(JSON.stringify(data, null, 2, '\t'));
+    const user = req.user.user
+    const front_pagination = []
+    for (let index = 1; index <= data.totalPages; index++) {
+        front_pagination.push({
+            page: index,
+            active: index == data.page
+        })
+        
+    }
+    res.render('products', {data,user,front_pagination})
 
-    const user = req.session.user
-
-    if(req.session.email === 'jaimesilvalorca@gmail.com' && req.session.password==='Darkshadow.12') return res.render('products', {data, user})
+    // if(req.session.email === 'jaimesilvalorca@gmail.com' && req.session.password==='Darkshadow.12') return res.render('products', {data, user})
 })
 
 

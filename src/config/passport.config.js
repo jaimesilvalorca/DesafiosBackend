@@ -27,6 +27,9 @@ const initializePassport = () => {
                 email:profile._json.email
             })
 
+            const token = generateToken(user)
+            user.token = token
+
             return done(null,newUser)
             
         } catch (error) {

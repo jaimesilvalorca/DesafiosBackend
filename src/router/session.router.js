@@ -18,10 +18,10 @@ router.get('/github/login',passport.authenticate('github',{scope:['user:email']}
 
 router.get('/githubcallback', passport.authenticate('github',{failureRedirect:'/session/login'}),
 async(req,res)=>{
-
-    req.session.user = req.user
-    res.redirect('/api/products')
-
+    if (!req.user) {
+        return res.status(400).send({ status: 'error', error: 'Invalid credentials'})
+    }
+    res.cookie(process.env.JWT_COOKIE_NAME,req.user.token).redirect('/api/products/view')
 }
 )
 
@@ -47,13 +47,13 @@ router.post('/login',
         return res.status(400).send({ status: 'error', error: 'Invalid credentials'})
     }
 
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        age: req.user.age
-    }
-    res.cookie(process.env.JWT_COOKIE_NAME,req.user.token).redirect('/api/products/view')
+    // req.session.user = {
+    //     first_name: req.user.first_name,
+    //     last_name: req.user.last_name,
+    //     email: req.user.email,
+    //     age: req.user.age
+    // }
+    res.cookie(process.env.JWT_COOKIE_NAME,req.user.token).redirect('/products')
 })
 
 router.get('/failLogin', (req, res) => {
@@ -61,15 +61,19 @@ router.get('/failLogin', (req, res) => {
 })
 
 router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            res.status(500).render('errors/base')
-        } else {
-            res.redirect('/session/login')
-        }
-    })
+    // req.session.destroy(err => {
+    //     if (err) {
+    //         res.status(500).render('errors/base')
+    //     } else {
+    //         res.redirect('/session/login')
+    //     }
+    // })
+    res.clearCookie(process.env.JWT_COOKIE_NAME).redirect('/session/login')
 })
 
+router.get('/current',(req,res)=>{
+    res.send('')
+})
 
 
 export default router

@@ -39,10 +39,10 @@ app.get('/', (request, response) => {
 })
 
 app.use(session({
-    store:MongoStore.create({
-        mongoUrl:url,
-        dbName:'ecommerce'    
-    }),
+    // store:MongoStore.create({
+    //     mongoUrl:url,
+    //     dbName:'ecommerce'    
+    // }),
     secret:'jaimesilva',
     resave:true,
     saveUninitialized:true
@@ -55,7 +55,7 @@ app.use('/session',sessionRouter)
 
 app.use('/api/products',passportCall('jwt'),productRouter)
 app.use('/api/carts', cartRouter)
-app.use('/api/productsview',productViewRouter)
+app.use('/products',passportCall('jwt'),productViewRouter)
 app.use('/api/chats',chatRouter)
 
 mongoose.set('strictQuery', false)
