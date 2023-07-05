@@ -5,17 +5,22 @@ import { createHash, isValidPassword,generateToken,extractCookie } from "../util
 import GitHubStrategy from 'passport-github2'
 import dotenv from 'dotenv'
 import passport_jwt, { ExtractJwt } from 'passport-jwt'
+import config from "../config.js";
 
-dotenv.config()
+
+
 
 const LocalStrategy = local.Strategy
 const JWTStrategy = passport_jwt.Strategy
+const clientId = config.clientId
+const clientSecret = config.clientSecret
+const jwtPrivateKey = config.jwtPrivateKey
 
 const initializePassport = () => {
 
     passport.use('github',new GitHubStrategy({
-        clientID: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
+        clientID: clientId,
+        clientSecret: clientSecret,
         callbackURL: 'http://localhost:8080/session/githubcallback'
     },async(accessToken,refreshToken,profile,done)=>{
         console.log(profile)
@@ -30,11 +35,10 @@ const initializePassport = () => {
             const token = generateToken(user)
             user.token = token
 
-            return done(null,newUser)
+            return done(null,user)
             
         } catch (error) {
             return done('Error to login with github'+error)
-            
         }
     }))
 
@@ -88,7 +92,7 @@ const initializePassport = () => {
 
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: ExtractJwt.fromExtractors([extractCookie]),
-        secretOrKey: process.env.JWT_PRIVATE_KEY 
+        secretOrKey: jwtPrivateKey 
     },async(jwt_payload,done)=>{
         done(null,jwt_payload)
     }))
@@ -102,7 +106,6 @@ const initializePassport = () => {
         done(null, user)
     })
 }
-
 
 
 export default initializePassport

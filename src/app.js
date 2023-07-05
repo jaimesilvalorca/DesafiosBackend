@@ -20,9 +20,17 @@ import passport from "passport"
 import initializePassport from "./config/passport.config.js"
 import {passportCall} from "./utils.js"
 import cookieParser from "cookie-parser"
+import dotenv from "dotenv"
+import config from './config.js'
+
+dotenv.config()
 
 
-const url = 'mongodb+srv://coder:coder@cluster0.cmvdrrk.mongodb.net/ecommerce'
+const url = config.uri || 'mongodb://127.0.0.1:27017/ecommerce'
+// const url = 'mongodb://127.0.0.1:27017/ecommerce'
+
+const port = config.port || 3000
+
 
 const app = express()
 
@@ -63,9 +71,9 @@ mongoose.set('strictQuery', false)
 try {
     await mongoose.connect(url);
     console.log("DB conected");
-    const httpServer = app.listen(8080, () => {
+    const httpServer = app.listen(port, () => {
         console.log("Server UP");
-        console.log("http://localhost:8080/")
+        console.log(`http://localhost:${port}/`)
     });
 
     const socketServer = new Server(httpServer);

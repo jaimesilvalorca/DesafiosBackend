@@ -3,8 +3,11 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import passport from 'passport'
 import Strategy from 'passport-github2'
+import config from "./config.js";
 
-dotenv.config()
+const jwtCookieName = config.jwtCookieName
+const jwtPrivateKey = config.jwtPrivateKey
+console.log(jwtCookieName,jwtPrivateKey)
 
 
 export const createHash = password =>{
@@ -16,12 +19,12 @@ export const isValidPassword = (user,password)=>{
 }
 
 export const generateToken = user =>{
-    const token = jwt.sign({user}, process.env.JWT_PRIVATE_KEY,{expiresIn:'24h'})
+    const token = jwt.sign({user}, jwtPrivateKey,{expiresIn:'24h'})
     return token
 }
 
 export const extractCookie = req =>{
-    return (req && req.cookies) ? req.cookies[process.env.JWT_COOKIE_NAME] : null
+    return (req && req.cookies) ? req.cookies[jwtCookieName] : null
 }
 
 export const passportCall = strategy =>{
