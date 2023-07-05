@@ -4,7 +4,7 @@ import productModel from "../dao/models/products.models.js";
 import { createHash, isValidPassword } from "../utils.js";
 import passport from "passport"
 import dotenv from 'dotenv'
-import { failureRegister, githubCallback, githubCallbackJWT, githubLogin, loginUser, loginUserSucces, logoutUser, redirectToLogin, registerUser, showLoginPage, showRegisterPage } from "../controller/session.controller.js";
+import { failureRegister, getCurrentSession, githubCallback, githubCallbackJWT, githubLogin, loginUser, loginUserSucces, logoutUser, redirectToLogin, registerUser, showLoginPage, showRegisterPage } from "../controller/session.controller.js";
 
 dotenv.config()
 
@@ -18,6 +18,7 @@ router.get('/githubcallback', githubCallback, githubCallbackJWT)
 router.post('/register', registerUser,redirectToLogin, failureRegister)
 router.post('/login', loginUser, loginUserSucces)
 router.get('/logout', logoutUser);
+router.get('/current',getCurrentSession)
 
 
 export default router

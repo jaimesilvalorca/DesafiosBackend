@@ -52,3 +52,11 @@ export const githubCallbackJWT = async(req,res)=>{
     const token = req.user.token;
     res.cookie(process.env.JWT_COOKIE_NAME, token).redirect('/products');
 }
+
+export const getCurrentSession = (req,res) =>{
+    if (req.user) {
+        return res.json({ user: req.user });
+      } else {
+        return res.status(401).json({ error: 'Token Invalido' });
+      }
+    };
